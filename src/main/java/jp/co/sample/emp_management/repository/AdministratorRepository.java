@@ -35,6 +35,20 @@ public class AdministratorRepository {
 
 	@Autowired
 	private NamedParameterJdbcTemplate template;
+	
+	/**
+	 * 主キーから管理者情報を取得します.
+	 * 
+	 * @param id ID
+	 * @return 管理者情報 
+	 * @throws EmptyDataAccessException 存在しない場合は例外を発生します
+	 */
+	public Administrator load(Integer id) {
+		String sql = "select id,name,mail_address,password from administrators where id=:id";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		Administrator administrator = template.queryForObject(sql, param, ADMINISTRATOR_ROW_MAPPER);
+		return administrator;
+	}
 
 	/**
 	 * メールアドレスとパスワードから管理者情報を取得します.
