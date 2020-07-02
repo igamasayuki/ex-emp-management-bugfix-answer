@@ -18,8 +18,16 @@
     </td>
   </tr>
 
- ※<input type="file" ・・・>を使用する
+　　 ※<input type="file" ・・・>を使用する
  
+ 
+ ○InsertEmployeeFormクラス
+ 
+ 	/** 画像 */
+	private MultipartFile imageFile;
+	
+	※ファイルはMultipartFile型で受け取ることが可能です
+	
  
  ○EmployeeControllerの insert()メソッド
  
