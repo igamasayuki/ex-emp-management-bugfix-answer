@@ -1,8 +1,15 @@
 ログイン認証フィルターに必要なクラスやメソッドなど
 
+○SpringSecurityを導入する方法
+　　pom.xmlに以下を追加
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-security</artifactId>
+	</dependency>
+		
 ○設定情報保持クラス
-　SecurityConfig
-　　・・・ログイン認証用設定クラス
+　SecurityConfigクラス
+　　・・・ログイン認証用の設定クラス
 
 ○ドメイン
 　LoginAdministrator
@@ -11,25 +18,19 @@
 ○サービスクラス
 　AdministratorDetailsServiceImpl
 　　・・・ログイン後のメンバー情報に権限情報を付与するサービスクラス
+　　　　　ログイン時、Springから自動で呼ばれる
 
-○pom.xml
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-        </dependency>
-        
+
+============================================================
 ○HTMLでログイン情報を取得する方法
-pom.xmlに以下を追加
-<dependency>
-    <groupId>org.thymeleaf.extras</groupId>
-    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-</dependency>
+	pom.xmlに以下を追加
+	<dependency>
+	    <groupId>org.thymeleaf.extras</groupId>
+	    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+	</dependency>
 
-htmlでの記述
+
+○htmlでの記述
 <html lang="ja"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
@@ -37,14 +38,15 @@ htmlでの記述
 　<span sec:authentication="principal.administrator.name">山田</span>さんこんにちは！
 
 
-以下のようにすると権限毎に表示を変えることができる
+	以下のようにすると権限毎に表示を変えることができる
+	
+	<!-- 管理者の人だけ表示 -->
+	<span sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin">Admin</a></span>
+	<span sec:authorize="hasRole('ROLE_USER')"><a href="/user">User</a></span>
+	<!-- ログインしていない人だけ表示 -->
+	<span sec:authorize="isAuthenticated()"><a href="/login">ログイン</a></span>
 
-<!-- 管理者の人だけ表示 -->
-<span sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin">Admin</a></span>
-<span sec:authorize="hasRole('ROLE_USER')"><a href="/user">User</a></span>
-<!-- ログインしていない人だけ表示 -->
-<span sec:authorize="isAuthenticated()"><a href="/login">ログイン</a></span>
-
+============================================================
 ○コントローラでログイン情報を取得する方法
 　→EmployeeControllerクラスのshowListメソッド
 	@RequestMapping("/showList")
@@ -52,11 +54,11 @@ htmlでの記述
 		
 		// ログイン情報をコントローラで取得するサンプル
 		System.out.println(loginAdministrator.getAdministrator().getName() + "さんがログイン中");
-		
-  
-○CSRF対策
-　<form th:object="${insertEmployeeForm}">を使用すると　
-　以下のようにCSRF対策用のトークンが自動的にhiddenに埋め込まれ、
-　裏側でトークンチェックをしてくれるのでCSRF対策が自動で行われる
 
-　<input type="hidden" name="_csrf" value="951b7049-1919-40ce-b0bd-e06e2f37e24a"/>
+============================================================
+○CSRF対策
+	<form th:object="${insertEmployeeForm}">を使用すると　
+	以下のようにCSRF対策用のトークンが自動的にhiddenに埋め込まれ、
+	裏側でトークンチェックをしてくれるのでCSRF対策が自動で行われる
+	
+	<input type="hidden" name="_csrf" value="951b7049-1919-40ce-b0bd-e06e2f37e24a"/>
