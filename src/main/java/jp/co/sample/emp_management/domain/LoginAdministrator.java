@@ -20,7 +20,7 @@ public class LoginAdministrator  extends User{
 	/**
 	 * 通常の管理者情報に加え、認可用ロールを設定する。
 	 * 
-	 * @param Administrator　管理者情報
+	 * @param administrator 管理者情報
 	 * @param authorityList 権限情報が入ったリスト
 	 */
 	public LoginAdministrator(Administrator administrator, Collection<GrantedAuthority> authorityList) {
@@ -28,6 +28,11 @@ public class LoginAdministrator  extends User{
 		this.administrator = administrator;
 	}
 
+	/**
+	 * 管理者情報を返します.
+	 * 
+	 * @return 管理者情報
+	 */
 	public Administrator getAdministrator() {
 		return administrator;
 	}

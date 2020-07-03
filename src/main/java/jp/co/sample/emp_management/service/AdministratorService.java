@@ -27,7 +27,7 @@ public class AdministratorService {
 	 * 管理者情報を登録します.
 	 * パスワードはここでハッシュ化されます
 	 * 
-	 * @param administrator　管理者情報
+	 * @param administrator 管理者情報
 	 */
 	public void insert(Administrator administrator) {
 		

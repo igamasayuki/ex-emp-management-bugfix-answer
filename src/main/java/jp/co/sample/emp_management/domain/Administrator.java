@@ -25,14 +25,10 @@ public class Administrator {
 	/**
 	 * 初期化用コンストラクタ.
 	 * 
-	 * @param id
-	 *            id(主キー)
-	 * @param name
-	 *            名前
-	 * @param mailAddress
-	 *            メールアドレス
-	 * @param password
-	 *            パスワード
+	 * @param id          id(主キー)
+	 * @param name        名前
+	 * @param mailAddress メールアドレス
+	 * @param password    パスワード
 	 */
 	public Administrator(Integer id, String name, String mailAddress, String password) {
 		this.id = id;
@@ -41,34 +37,58 @@ public class Administrator {
 		this.password = password;
 	}
 
+	/**
+	 * @return the id
+	 */
 	public Integer getId() {
 		return id;
 	}
 
+	/**
+	 * @param id the id to set
+	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @param name the name to set
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return the mailAddress
+	 */
 	public String getMailAddress() {
 		return mailAddress;
 	}
 
+	/**
+	 * @param mailAddress the mailAddress to set
+	 */
 	public void setMailAddress(String mailAddress) {
 		this.mailAddress = mailAddress;
 	}
 
+	/**
+	 * @return the password
+	 */
 	public String getPassword() {
 		return password;
 	}
 
+	/**
+	 * @param password the password to set
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}

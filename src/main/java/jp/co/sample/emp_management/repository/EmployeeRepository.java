@@ -63,7 +63,7 @@ public class EmployeeRepository {
 	 * 
 	 * @param id 検索したい従業員ID
 	 * @return 検索された従業員情報
-	 * @exception 従業員が存在しない場合は例外を発生します
+	 * @exception org.springframework.dao.DataAccessException 従業員が存在しない場合は例外を発生します
 	 */
 	public Employee load(Integer id) {
 		String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees WHERE id=:id";

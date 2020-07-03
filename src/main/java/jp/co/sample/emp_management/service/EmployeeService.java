@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import jp.co.sample.emp_management.domain.Employee;
 import jp.co.sample.emp_management.form.InsertEmployeeForm;
@@ -47,7 +46,7 @@ public class EmployeeService {
 	 * 
 	 * @param id ID
 	 * @return 従業員情報
-	 * @throws 検索されない場合は例外が発生します
+	 * @throws org.springframework.dao.DataAccessException 検索されない場合は例外が発生します
 	 */
 	public Employee showDetail(Integer id) {
 		Employee employee = employeeRepository.load(id);
@@ -57,7 +56,7 @@ public class EmployeeService {
 	/**
 	 * 従業員情報を更新します.
 	 * 
-	 * @param employee　更新した従業員情報
+	 * @param employee 更新した従業員情報
 	 */
 	public void update(Employee employee) {
 		employeeRepository.update(employee);
@@ -67,7 +66,10 @@ public class EmployeeService {
 	 * 従業員情報を登録します.<br>
 	 * 画像ファイルはBase64形式に変換します。
 	 * 
-	 * @param employee　登録した従業員情報
+	 * @param form フォーム
+	 * @param fileExtension ファイルの拡張子
+	 * @return インサートした従業員情報
+	 * @throws IOException 不正なファイルが渡ってきた場合に発生
 	 */
 	public Employee insert(InsertEmployeeForm form, String fileExtension) throws IOException {
 		

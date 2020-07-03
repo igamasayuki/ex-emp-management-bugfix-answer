@@ -41,7 +41,7 @@ public class AdministratorRepository {
 	 * 
 	 * @param id ID
 	 * @return 管理者情報 
-	 * @throws EmptyDataAccessException 存在しない場合は例外を発生します
+	 * @throws org.springframework.dao.DataAccessException 存在しない場合は例外を発生します
 	 */
 	public Administrator load(Integer id) {
 		String sql = "select id,name,mail_address,password from administrators where id=:id";
@@ -54,7 +54,7 @@ public class AdministratorRepository {
 	 * メールアドレスとパスワードから管理者情報を取得します.
 	 * 
 	 * @param mailAddress メールアドレス
-	 * @param passward    パスワード
+	 * @param password パスワード
 	 * @return 管理者情報 存在しない場合はnullを返します
 	 */
 	public Administrator findByMailAddressAndPassward(String mailAddress, String password) {

@@ -57,9 +57,9 @@ public class EmployeeController {
 	 * 従業員一覧画面を出力します.
 	 * 
 	 * @param model モデル
-	 * @param 出力したいページ数
-	 * @param 検索文字列
-	 * @param ログイン情報をコントローラで取得
+	 * @param page 出力したいページ数
+	 * @param searchName 検索文字列
+	 * @param loginAdministrator ログイン情報をコントローラで取得
 	 * @return 従業員一覧画面
 	 */
 	@RequestMapping("/showList")
