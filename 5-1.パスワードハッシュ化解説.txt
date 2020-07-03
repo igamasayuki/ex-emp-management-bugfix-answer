@@ -5,60 +5,77 @@
 
 パスワードハッシュ化
 ○pom.xml
-<!-- Spring Security -->
-<dependency>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-starter-security</artifactId>
-</dependency>
+	<!-- Spring Security -->
+	<dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-starter-security</artifactId>
+	</dependency>
 
 ○SecurityConfig.java
-/**
-  * <pre>
-  * bcryptアルゴリズムでハッシュ化する実装を返します.
-  * これを指定することでパスワード暗号化やマッチ確認する際に
-  * @Autowired
-  * private PasswordEncoder passwordEncoder;
-  * と記載するとDIされるようになります。
-  * </pre>
-  * @return bcryptアルゴリズムで暗号化する実装オブジェクト
-  */
- @Bean
- public PasswordEncoder passwordEncoder() {
-     return new BCryptPasswordEncoder();
- }
+
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		// SpringSecurityを導入すると毎回アクセス時にSpringがログイン画面を出してしまう
+		// 下記の設定は全てのパスをログインしなくてもアクセスできるようにする設定
+		http.authorizeRequests().anyRequest().permitAll();
+	}
+	
+	 /**
+	  * <pre>
+	  * bcryptアルゴリズムでハッシュ化する実装を返します.
+	  * これを指定することでパスワード暗号化やマッチ確認する際に
+	  * @Autowired
+	  * private PasswordEncoder passwordEncoder;
+	  * と記載するとDIされるようになります。
+	  * </pre>
+	  * @return bcryptアルゴリズムで暗号化する実装オブジェクト
+	  */
+	 @Bean
+	 public PasswordEncoder passwordEncoder() {
+	     return new BCryptPasswordEncoder();
+	 }
+	 
+}
 
 ○AdministratorService
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-  /**
- * 管理者情報を登録します.
- * パスワードはここでハッシュ化されます
- * 
- * @param administrator　管理者情報
- */
-public void insert(Administrator administrator) {
-  
-  // パスワードをハッシュ化
-  administrator.setPassword(passwordEncoder.encode(administrator.getPassword()));
-  
-  administratorRepository.insert(administrator);
-}
+	/**
+	 * 管理者情報を登録します.
+	 * パスワードはここでハッシュ化されます
+	 * 
+	 * @param administrator　管理者情報
+	 */
+	public void insert(Administrator administrator) {
+	  
+	  // パスワードをハッシュ化
+	  administrator.setPassword(passwordEncoder.encode(administrator.getPassword()));
+	  
+	  administratorRepository.insert(administrator);
+	}
 
 
-/**
- * ログインをします.(SpringSecurityに任せるためコメントアウトしました)
- * @param mailAddress メールアドレス
- * @param password パスワード
- * @return 管理者情報　存在しない場合はnullが返ります
- */
-public Administrator login(String mailAddress, String passward) {
-  Administrator administrator 
-  	= administratorRepository.findByMailAddress(mailAddress);
-  // パスワード一致チェック
-  if(passwordEncoder.matches(passward, administrator.getPassword())) {
-    return administrator;
-  }
-  return null;
-}
+	/**
+	 * ログインをします.
+	 *
+	 * @param mailAddress メールアドレス
+	 * @param password    パスワード
+	 * @return 管理者情報 存在しない場合またはパスワードが不一致だった場合はnullが返ります
+	 */
+	public Administrator login(String mailAddress, String passward) {
+		Administrator administrator = administratorRepository.findByMailAddress(mailAddress);
+		// 対象の管理者がいない場合はnullを返す
+		if (administrator == null) {
+			return null;
+		}
+		// パスワードが不一致だった場合はnullを返す
+		if (!passwordEncoder.matches(passward, administrator.getPassword())) {
+			return null;
+		}
+		
+		return administrator;
+	}
