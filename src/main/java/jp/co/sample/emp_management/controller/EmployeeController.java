@@ -3,12 +3,10 @@ package jp.co.sample.emp_management.controller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -231,21 +229,8 @@ public class EmployeeController {
 			return toInsert(model);
 		}
 
-		// 従業員情報を作成
-		Employee employee = new Employee();
-		BeanUtils.copyProperties(form, employee);
-
-		// 画像ファイルをBase64形式にエンコード
-		String base64FileString = Base64.getEncoder().encodeToString(imageFile.getBytes());
-		if ("jpg".equals(fileExtension)) {
-			base64FileString = "data:image/jpeg;base64," + base64FileString;
-		} else if ("png".equals(fileExtension)) {
-			base64FileString = "data:image/png;base64," + base64FileString;
-		}
-		employee.setImage(base64FileString);
-
 		// DBインサート
-		employeeService.insert(employee);
+		employeeService.insert(form, fileExtension);
 
 		return "redirect:/employee/showList";
 	}

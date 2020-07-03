@@ -50,7 +50,8 @@
 ○コントローラでログイン情報を取得する方法
 　→EmployeeControllerクラスのshowListメソッド
 	@RequestMapping("/showList")
-	public String showList(Model model, @AuthenticationPrincipal LoginAdministrator loginAdministrator) {
+	public String showList(Model model
+			, @AuthenticationPrincipal LoginAdministrator loginAdministrator) {
 		
 		// ログイン情報をコントローラで取得するサンプル
 		System.out.println(loginAdministrator.getAdministrator().getName() + "さんがログイン中");

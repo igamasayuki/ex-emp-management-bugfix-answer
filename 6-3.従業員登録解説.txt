@@ -2,7 +2,10 @@
 
 ○insert.html 従業員登録画面
 
-<form method="post" action="list.html" th:action="@{/employee/insert}" th:object="${insertEmployeeForm}" enctype="multipart/form-data">
+<form method="post" action="list.html" 
+	th:action="@{/employee/insert}" 
+	th:object="${insertEmployeeForm}" 
+	enctype="multipart/form-data">
 
 ※enctype="multipart/form-data"を忘れずに
 
@@ -29,16 +32,30 @@
 	※ファイルはMultipartFile型で受け取ることが可能です
 	
  
- ○EmployeeControllerの insert()メソッド
+ ○EmployeeServiceの insert()メソッド
  
+	/**
+	 * 従業員情報を登録します.<br>
+	 * 画像ファイルはBase64形式に変換します。
+	 * 
+	 * @param employee　登録した従業員情報
+	 */
+	public Employee insert(InsertEmployeeForm form, String fileExtension) throws IOException {
+		
+		Employee employee = new Employee();
+		BeanUtils.copyProperties(form, employee);
+
 		// 画像ファイルをBase64形式にエンコード
-		String base64FileString = Base64.getEncoder().encodeToString(imageFile.getBytes());
+		String base64FileString = Base64.getEncoder().encodeToString(form.getImageFile().getBytes());
 		if ("jpg".equals(fileExtension)) {
 			base64FileString = "data:image/jpeg;base64," + base64FileString;
 		} else if ("png".equals(fileExtension)) {
 			base64FileString = "data:image/png;base64," + base64FileString;
 		}
 		employee.setImage(base64FileString);
+		
+		return employeeRepository.insert(employee);
+	}
 
 
 ○detail.html 従業員情報表示

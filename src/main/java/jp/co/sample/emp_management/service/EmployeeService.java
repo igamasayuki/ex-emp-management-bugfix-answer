@@ -1,16 +1,21 @@
 package jp.co.sample.emp_management.service;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import jp.co.sample.emp_management.domain.Employee;
+import jp.co.sample.emp_management.form.InsertEmployeeForm;
 import jp.co.sample.emp_management.repository.EmployeeRepository;
 
 /**
@@ -59,11 +64,25 @@ public class EmployeeService {
 	}
 	
 	/**
-	 * 従業員情報を登録します.
+	 * 従業員情報を登録します.<br>
+	 * 画像ファイルはBase64形式に変換します。
 	 * 
 	 * @param employee　登録した従業員情報
 	 */
-	public Employee insert(Employee employee) {
+	public Employee insert(InsertEmployeeForm form, String fileExtension) throws IOException {
+		
+		Employee employee = new Employee();
+		BeanUtils.copyProperties(form, employee);
+
+		// 画像ファイルをBase64形式にエンコード
+		String base64FileString = Base64.getEncoder().encodeToString(form.getImageFile().getBytes());
+		if ("jpg".equals(fileExtension)) {
+			base64FileString = "data:image/jpeg;base64," + base64FileString;
+		} else if ("png".equals(fileExtension)) {
+			base64FileString = "data:image/png;base64," + base64FileString;
+		}
+		employee.setImage(base64FileString);
+		
 		return employeeRepository.insert(employee);
 	}
 
