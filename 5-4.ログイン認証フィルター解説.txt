@@ -44,7 +44,7 @@
 	<span sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin">Admin</a></span>
 	<span sec:authorize="hasRole('ROLE_USER')"><a href="/user">User</a></span>
 	<!-- ログインしていない人だけ表示 -->
-	<span sec:authorize="isAuthenticated()"><a href="/login">ログイン</a></span>
+	<span sec:authorize="!isAuthenticated()"><a href="/login">ログイン</a></span>
 
 ============================================================
 ○コントローラでログイン情報を取得する方法
