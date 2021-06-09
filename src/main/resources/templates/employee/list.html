@@ -18,11 +18,10 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 $( function() {
-  var availableTags = [ [(${employeeListForAutocomplete})] ];
-
-  $( "#searchName" ).autocomplete({
-    source: availableTags
-  });
+	let availableTags = [[${employeeListForAutocomplete}]];
+	$( "#searchName" ).autocomplete({
+		source: availableTags
+	});
 } );
 </script>
 </head>

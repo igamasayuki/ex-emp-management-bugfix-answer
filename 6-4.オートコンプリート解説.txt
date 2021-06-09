@@ -1,0 +1,79 @@
+=================================
+従業員の名前一覧をスコープに入れて、それをJSで参照する方法
+=================================
+○EmployeeService
+	/**
+	 * オートコンプリート用にJavaScriptの配列の中身を文字列で作ります.
+	 * 
+	 * @param employeeList 従業員一覧
+	 * @return　オートコンプリート用JavaScriptの配列の文字列
+	 * 　　　　　(例) "渡辺三郎","佐藤次郎","山本八郎","小林九子"
+	 */
+	public StringBuilder getEmployeeListForAutocomplete(List<Employee> employeeList) {
+		StringBuilder employeeListForAutocomplete = new StringBuilder();
+		for (int i = 0; i < employeeList.size(); i++) {
+			if (i != 0) {
+				employeeListForAutocomplete.append(",");
+			}
+			Employee employee = employeeList.get(i);
+			employeeListForAutocomplete.append("\"");
+			employeeListForAutocomplete.append(employee.getName());
+			employeeListForAutocomplete.append("\"");
+		}
+		return employeeListForAutocomplete;
+	}
+	
+○EmployeeController
+	// オートコンプリート用にJavaScriptの配列の中身を文字列で作ってスコープへ格納
+	StringBuilder employeeListForAutocomplete = employeeService.getEmployeeListForAutocomplete(employeeList);
+	model.addAttribute("employeeListForAutocomplete", employeeListForAutocomplete);
+
+○list.html
+$( function() {
+	let availableTags = [[${employeeListForAutocomplete}]]; //←スコープないの文字列を使ってjsの配列に格納する処理
+	$( "#searchName" ).autocomplete({
+		source: availableTags
+	});
+} );
+
+=================================
+Ajaxで実現する方法
+=================================
+$( function(){
+    $.ajax({
+        url: "http://localhost:8080/employee/getJsonForEmployeeNameList",
+        type: "get",
+        dataType: "json",
+        async: true,
+    }).done( function(data) {
+        // RestControllerではnameのリストをreturnするとJSON形式でdataに入る
+    	console.dir(JSON.stringify(data))
+    	
+        $("#search").autocomplete({
+			source: data 
+		});
+
+    }).fail( function(XMLHttpRequest, testStatus, errorThrown) {
+        alert("エラーが発生しました.");
+        console.log('XMLHttpRequest: ' + XMLHttpRequest);
+        console.log("testStatus: " + testStatus);
+        console.log("errorThrown" + errorThrown);
+    })
+});
+
+=================================
+(超簡単！)HTMLだけで実現する方法
+=================================
+<datalist>タグを使用すると簡単に実現できます。
+https://developer.mozilla.org/ja/docs/Web/HTML/Element/datalist
+
+(例)
+	<form th:action="@{/employee/search}" action="#" method="GET" class="form-inline">
+		<label for="searchEmployee">従業員検索: </label>
+		<input type="text" class="form-control" id="searchEmployee" name="name" autocomplete="name" list="employeeList">
+		<datalist id="employeeList">
+			<option th:each="employee:${employeeList}" th:value="${employee.name}"></option>
+		</datalist>
+	</form>
+
+	※JSファイルの読み込みやコントローラも変更する必要なし
