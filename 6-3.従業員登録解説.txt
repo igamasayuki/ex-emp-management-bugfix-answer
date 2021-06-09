@@ -31,7 +31,14 @@
 	
 	※ファイルはMultipartFile型で受け取ることが可能です
 	
+	MultipartFileクラスのtransferTo(Path dest)を使えば画像を保存できそうだが、SpringBootの環境だと何故か動かない(仕様？バグ？サーブレットの時は動いていた)
+	https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/multipart/MultipartFile.html#transferTo-java.nio.file.Path-
  
+ 　　そのため違う方法で実装を行っています。
+ 
+ ===========================================
+ 画像ファイルはBase64形式に変換してDBに保存する方法
+ ===========================================
  ○EmployeeServiceの insert()メソッド
  
 	/**
@@ -89,4 +96,25 @@
 
 		return employee;
 	}
-	
+
+===========================================
+MultipartFileクラスのtransferTo(Path dest)を使わずに画像ファイルをサーバーに保存する方法
+===========================================
+
+	Employee employee = new Employee();
+	BeanUtils.copyProperties(insertEmployeeForm, employee);
+	employee.setHireDate(Date.valueOf(insertEmployeeForm.getHireDate()));
+	employee.setImage(insertEmployeeForm.getImage().getOriginalFilename());
+
+	String path = EmployeeController.class.getResource("/static").getFile() + "/img";
+	path = path.substring(1);
+	try {
+		Files.copy(insertEmployeeForm.getImage().getInputStream(),
+				Paths.get(path, insertEmployeeForm.getImage().getOriginalFilename()));
+	} catch (Exception e) {
+		e.printStackTrace();
+		result.rejectValue("image", "xxxxx", new Object[] { 50000 }, "ファイルのアップロードに失敗しました。もう一度お試しください。");
+		return "employee/insert";
+	}
+
+	employeeService.register(employee);
