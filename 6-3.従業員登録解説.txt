@@ -61,4 +61,32 @@
 ○detail.html 従業員情報表示
 　
 <img  th:src="${employee.image}" />
+
+
+○EmployeeRepositoryのinsert()メソッド　排他制御
+
+	/**
+	 * 従業員情報を登録します.
+	 * <pre>
+	 * このメソッドでは、IDをプログラムで採番しています。
+	 * ・従業員テーブルから重複しないIDを取ってくる
+	 * ・取ってきたIDを使ってインサートする
+	 * これを別スレッドに移ることなく確実に処理するためにsynchronizedをつけています。
+	 * </pre>
+	 * @param employee 従業員情報
+	 * @return インサートした従業員情報
+	 */
+	synchronized public Employee insert(Employee employee) {
+		// IDの採番
+		employee.setId(getPrimaryId());
+		
+		SqlParameterSource param = new BeanPropertySqlParameterSource(employee);
+
+		// インサート処理
+		String insertSql = "INSERT INTO employees(id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count) "
+				+ " VALUES(:id,:name,:image,:gender,:hireDate,:mailAddress,:zipCode,:address,:telephone,:salary,:characteristics,:dependentsCount)";
+		template.update(insertSql, param);
+
+		return employee;
+	}
 	
