@@ -1,0 +1,23 @@
+=================================
+jQueryページングプラグインによる実装方法
+=================================
+参考サイト：https://www.omakase.net/blog/2021/04/paginathingjs.html
+
+pagination.jsを入れる
+
+
+<tbody class="employee_list">
+  <tr th:each="employee : ${employeeList}">
+  
+
+list.html
+<script th:src="@{/js/pagenathing.min.js}"></script>
+<script type="text/javascript">
+$(function() {
+  $('.employee_list').paginathing({//親要素のclassを記述
+    perPage: 10,//1ページあたりの表示件数
+    prevText:'前へ',//1つ前のページへ移動するボタンのテキスト
+    nextText:'次へ',//1つ次のページへ移動するボタンのテキスト
+  })
+});
+</script>
