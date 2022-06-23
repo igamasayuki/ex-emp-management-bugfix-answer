@@ -34,8 +34,8 @@ public class AdministratorDetailsServiceImpl implements UserDetailsService {
 	 * loadUserByUsername(java.lang.String) DBから検索をし、ログイン情報を構成して返す。
 	 */
 	@Override
-	public UserDetails loadUserByUsername(String email)
-			throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		System.out.println("email:" + email);
 		Administrator administrator = administratorRepository.findByMailAddress(email);
 		if (administrator == null) {
 			throw new UsernameNotFoundException("そのEmailは登録されていません。");
@@ -46,6 +46,6 @@ public class AdministratorDetailsServiceImpl implements UserDetailsService {
 //		if(administrator.isAdmin()) {
 //			authorityList.add(new SimpleGrantedAuthority("ROLE_ADMIN")); // 管理者権限付与
 //		}
-		return new LoginAdministrator(administrator,authorityList);
+		return new LoginAdministrator(administrator, authorityList);
 	}
 }

@@ -75,7 +75,7 @@
 							      従業員名
 							    </th>
 							    <td>
-									<label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-messages">
+									<label th:errors="*{name}" class="error-messages">
 										従業員名を入力してください
 									</label>
 									<input type="text" name="name" id="name" class="form-control" placeholder="山田太郎"
@@ -87,7 +87,7 @@
 							      写真
 							    </th>
 							    <td>
-									<label th:if="${#fields.hasErrors('imageFile')}" th:errors="*{imageFile}" class="error-messages">
+									<label th:errors="*{imageFile}" class="error-messages">
 										写真を選択してください
 									</label>
 									<input name="imageFile" type="file" accept=".jpg,.png,image/jpeg,image/png" th:errorclass="error-input"/>
@@ -98,7 +98,7 @@
 							      性別
 							    </th>
 							    <td>
-								    <label th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="error-messages">
+								    <label th:errors="*{gender}" class="error-messages">
 										性別を選択してください
 									</label>
 						            <div class="radio-inline" th:each="item : ${genderMap}">
