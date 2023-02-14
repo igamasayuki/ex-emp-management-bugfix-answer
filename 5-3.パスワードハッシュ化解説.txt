@@ -4,22 +4,22 @@
 パスワードはハッシュ化してDBに保存する
 
 パスワードハッシュ化
-○pom.xml
-	<!-- Spring Security -->
-	<dependency>
-	  <groupId>org.springframework.boot</groupId>
-	  <artifactId>spring-boot-starter-security</artifactId>
-	</dependency>
+○build.gradleに以下の記述を追加
+dependencies {
+		：
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+		：
+}
 
-○SecurityConfig.java
+○SecurityConfig.javaを以下のように作成する
 
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+public class SecurityConfig {
+	@Bean
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		// SpringSecurityを導入すると毎回アクセス時にSpringがログイン画面を出してしまう
 		// 下記の設定は全てのパスをログインしなくてもアクセスできるようにする設定
-		http.authorizeRequests().anyRequest().permitAll();
+		http.authorizeHttpRequests().permitAll();
 	}
 	
 	 /**
@@ -33,10 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	  * @return bcryptアルゴリズムで暗号化する実装オブジェクト
 	  */
 	 @Bean
-	 public PasswordEncoder passwordEncoder() {
+	 PasswordEncoder passwordEncoder() {
 	     return new BCryptPasswordEncoder();
 	 }
-	 
 }
 
 ○AdministratorService

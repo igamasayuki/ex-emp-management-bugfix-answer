@@ -1,33 +1,35 @@
 ログイン認証フィルターに必要なクラスやメソッドなど
 
-○SpringSecurityを導入する方法
-　　pom.xmlに以下を追加
-	<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-security</artifactId>
-	</dependency>
+SpringSecurityを導入する方法
+○build.gradleに以下の記述を追加
+dependencies {
+		：
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+		：
+}
 		
 ○設定情報保持クラス
 　SecurityConfigクラス
-　　・・・ログイン認証用の設定クラス
+　　・・・ログイン認証用の設定クラスを参照のこと
 
 ○ドメイン
-　LoginAdministrator
+　LoginAdministratorクラス
 　　・・・Administratorドメインに権限(ロール)情報が付与されたドメイン
 
 ○サービスクラス
-　AdministratorDetailsServiceImpl
+　AdministratorDetailsServiceImplクラス
 　　・・・ログイン後のメンバー情報に権限情報を付与するサービスクラス
 　　　　　ログイン時、Springから自動で呼ばれる
 
 
 ============================================================
-○HTMLでログイン情報を取得する方法
-	pom.xmlに以下を追加
-	<dependency>
-	    <groupId>org.thymeleaf.extras</groupId>
-	    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-	</dependency>
+○TMLでログイン情報を取得する方法
+○build.gradleに以下の記述を追加
+dependencies {
+		：
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+		：
+}
 
 
 ○htmlでの記述

@@ -10,17 +10,16 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
- * ログイン認証用設定.
+ * ログイン認証用設定.<br>
+ * 
+ * 書き方が変更になりました。(以下、参考URL)<br>
+ * https://qiita.com/suke_masa/items/908805dd45df08ba28d8
  * 
  * @author igamasayuki
  *
  */
 @Configuration // 設定用のクラス
-//@EnableWebSecurity // Spring Securityのウェブ用の機能を利用する
 public class SecurityConfig {
-
-//	@Autowired
-//	private UserDetailsService memberDetailsService;
 
 	/**
 	 * このメソッドをオーバーライドすることで、 特定のリクエストに対して「セキュリティ設定」を 無視する設定など全体にかかわる設定ができる.
@@ -31,7 +30,6 @@ public class SecurityConfig {
 	@Bean
 	WebSecurityCustomizer webSecurityCustomizer() {
 		return (web) -> web.ignoring().requestMatchers("/css/**", "/img/**", "/js/**");
-//        return (web) -> web.ignoring().antMatchers("/css/**", "/img/**", "/js/**", "/fonts/**");
 	}
 
 	/**
@@ -67,19 +65,6 @@ public class SecurityConfig {
 
 		return http.build();
 	}
-
-//	/**
-//	 * 「認証」に関する設定.<br>
-//	 * 認証ユーザを取得する「UserDetailsService」の設定や<br>
-//	 * パスワード照合時に使う「PasswordEncoder」の設定
-//	 * 
-//	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder)
-//	 */
-//	@Override
-//	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//		auth.userDetailsService(memberDetailsService)
-//			.passwordEncoder(new BCryptPasswordEncoder());
-//	}
 
 	/**
 	 * <pre>
