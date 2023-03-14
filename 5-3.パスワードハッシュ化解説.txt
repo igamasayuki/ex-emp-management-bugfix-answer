@@ -19,7 +19,12 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		// SpringSecurityを導入すると毎回アクセス時にSpringがログイン画面を出してしまう
 		// 下記の設定は全てのパスをログインしなくてもアクセスできるようにする設定
-		http.authorizeHttpRequests().permitAll();
+		
+		http.authorizeHttpRequests(authz -> authz.requestMatchers(“/**“).permitAll());
+		または
+		http.authorizeHttpRequests().requestMatchers("/**").permitAll();
+		
+		return http.build();
 	}
 	
 	 /**
