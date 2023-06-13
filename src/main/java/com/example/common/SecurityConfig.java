@@ -39,13 +39,13 @@ public class SecurityConfig {
 	 */
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests() // 認可に関する設定
+		http.authorizeHttpRequests(ahr -> ahr
 				.requestMatchers("/", "/toInsert", "/insert").permitAll() // 「/」などのパスは全てのユーザに許可
-				// .requestMatchers("/admin/**").hasRole("ADMIN") //
+				// .requestMatchers("/admin/**").hasRole("ADMIN")
 				// /admin/から始まるパスはADMIN権限でログインしている場合のみアクセス可(権限設定時の「ROLE_」を除いた文字列を指定)
 				// .requestMatchers("/user/**").hasRole("USER") //
 				// /user/から始まるパスはUSER権限でログインしている場合のみアクセス可(権限設定時の「ROLE_」を除いた文字列を指定)
-				.anyRequest().authenticated();
+				.anyRequest().authenticated()); // それ以外のパスの場合はログイン認証が必要
 		
         http.formLogin(login -> login // ログインに関する設定
                 .loginPage("/") // ログイン画面に遷移させるパス(ログイン認証が必要なパスを指定してかつログインされていないとこのパスに遷移される)
