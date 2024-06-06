@@ -66,3 +66,10 @@ dependencies {
 	裏側でトークンチェックをしてくれるのでCSRF対策が自動で行われる
 	
 	<input type="hidden" name="_csrf" value="951b7049-1919-40ce-b0bd-e06e2f37e24a"/>
+============================================================
+○application.ymlに以下を追加
+spring:
+  # Spring Security .defaultSuccessUrl("/employee/showList", false)とした場合に初回のログインが失敗する現象に対応
+  autoconfigure:
+    exclude:
+      org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
