@@ -89,19 +89,11 @@ public class EmployeeRepository {
 
 	/**
 	 * 従業員情報を登録します.
-	 * <pre>
-	 * このメソッドでは、IDをプログラムで採番しています。
-	 * ・従業員テーブルから重複しないIDを取ってくる
-	 * ・取ってきたIDを使ってインサートする
-	 * これを別スレッドに移ることなく確実に処理するためにsynchronizedをつけています。
-	 * </pre>
+	 *
 	 * @param employee 従業員情報
 	 * @return インサートした従業員情報
 	 */
-	synchronized public Employee insert(Employee employee) {
-		// IDの採番
-		employee.setId(getPrimaryId());
-		
+	public Employee insert(Employee employee) {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(employee);
 
 		// インサート処理
@@ -112,12 +104,12 @@ public class EmployeeRepository {
 		return employee;
 	}
 
-	/*
+	/**
 	 * 従業員テーブルの中で一番大きいID + 1(プライマリーキー=主キー)を取得する.
 	 * 
 	 * @return テーブル内で一番値が大きいID + 1.データがない場合は1
 	 */
-	private Integer getPrimaryId() {
+	public Integer getPrimaryId() {
 		try {
 			Integer maxId = template.queryForObject("SELECT MAX(id) FROM employees;", new MapSqlParameterSource(),
 					Integer.class);

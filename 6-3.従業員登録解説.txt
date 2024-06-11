@@ -36,21 +36,32 @@
  
  　　そのため違う方法で実装を行っています。
  
- ===========================================
- 画像ファイルはBase64形式に変換してDBに保存する方法
- ===========================================
+ ===================================================
+ 画像ファイルはBase64形式に変換してDBに保存する方法&排他制御
+ ===================================================
  ○EmployeeServiceの insert()メソッド
  
 	/**
 	 * 従業員情報を登録します.<br>
 	 * 画像ファイルはBase64形式に変換します。
-	 * 
-	 * @param employee　登録した従業員情報
+	 * <pre>
+	 * このメソッドでは、IDをプログラムで採番しています。
+	 * ・従業員テーブルから重複しないIDを取ってくる
+	 * ・取ってきたIDを使ってインサートする
+	 * これを別スレッドに移ることなく確実に処理するためにsynchronizedをつけています。
+	 * </pre>
+	 * @param form フォーム
+	 * @param fileExtension ファイルの拡張子
+	 * @return インサートした従業員情報
+	 * @throws IOException 不正なファイルが渡ってきた場合に発生
 	 */
-	public Employee insert(InsertEmployeeForm form, String fileExtension) throws IOException {
-		
+	synchronized public Employee insert(InsertEmployeeForm form, String fileExtension) throws IOException {
+
 		Employee employee = new Employee();
 		BeanUtils.copyProperties(form, employee);
+
+		// IDの採番
+		employee.setId(employeeRepository.getPrimaryId());
 
 		// 画像ファイルをBase64形式にエンコード
 		String base64FileString = Base64.getEncoder().encodeToString(form.getImageFile().getBytes());
@@ -70,35 +81,9 @@
 <img  th:src="${employee.image}" />
 
 
-○EmployeeRepositoryのinsert()メソッド　排他制御
-
-	/**
-	 * 従業員情報を登録します.
-	 * <pre>
-	 * このメソッドでは、IDをプログラムで採番しています。
-	 * ・従業員テーブルから重複しないIDを取ってくる
-	 * ・取ってきたIDを使ってインサートする
-	 * これを別スレッドに移ることなく確実に処理するためにsynchronizedをつけています。
-	 * </pre>
-	 * @param employee 従業員情報
-	 * @return インサートした従業員情報
-	 */
-	synchronized public Employee insert(Employee employee) {
-		// IDの採番
-		employee.setId(getPrimaryId());
-		
-		SqlParameterSource param = new BeanPropertySqlParameterSource(employee);
-
-		// インサート処理
-		String insertSql = "INSERT INTO employees(id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count) "
-				+ " VALUES(:id,:name,:image,:gender,:hireDate,:mailAddress,:zipCode,:address,:telephone,:salary,:characteristics,:dependentsCount)";
-		template.update(insertSql, param);
-
-		return employee;
-	}
 
 ===========================================
-MultipartFileクラスのtransferTo(Path dest)を使わずに画像ファイルをサーバーに保存する方法
+(番外編)MultipartFileクラスのtransferTo(Path dest)を使わずに画像ファイルをサーバーに保存する方法
 ===========================================
 
 	Employee employee = new Employee();

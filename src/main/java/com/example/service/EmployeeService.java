@@ -65,16 +65,24 @@ public class EmployeeService {
 	/**
 	 * 従業員情報を登録します.<br>
 	 * 画像ファイルはBase64形式に変換します。
-	 * 
+	 * <pre>
+	 * このメソッドでは、IDをプログラムで採番しています。
+	 * ・従業員テーブルから重複しないIDを取ってくる
+	 * ・取ってきたIDを使ってインサートする
+	 * これを別スレッドに移ることなく確実に処理するためにsynchronizedをつけています。
+	 * </pre>
 	 * @param form フォーム
 	 * @param fileExtension ファイルの拡張子
 	 * @return インサートした従業員情報
 	 * @throws IOException 不正なファイルが渡ってきた場合に発生
 	 */
-	public Employee insert(InsertEmployeeForm form, String fileExtension) throws IOException {
+	synchronized public Employee insert(InsertEmployeeForm form, String fileExtension) throws IOException {
 		
 		Employee employee = new Employee();
 		BeanUtils.copyProperties(form, employee);
+
+		// IDの採番
+		employee.setId(employeeRepository.getPrimaryId());
 
 		// 画像ファイルをBase64形式にエンコード
 		String base64FileString = Base64.getEncoder().encodeToString(form.getImageFile().getBytes());
