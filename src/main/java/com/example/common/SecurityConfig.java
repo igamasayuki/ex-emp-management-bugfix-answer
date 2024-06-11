@@ -33,7 +33,7 @@ public class SecurityConfig {
 	}
 
 	/**
-	 * このメソッドをオーバーライドすることで、認可の設定やログイン/ログアウトに関する設定ができる.
+	 * このメソッドをオーバーライドすることで、認証と認可の設定やログイン/ログアウトに関する設定ができる.
 	 * 
 	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.HttpSecurity)
 	 */
