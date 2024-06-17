@@ -97,7 +97,7 @@ public class EmployeeController {
 		model.addAttribute("pageNumbers", pageNumbers);
 
 		// オートコンプリート用にJavaScriptの配列の中身を文字列で作ってスコープへ格納
-		StringBuilder employeeListForAutocomplete = employeeService.getEmployeeListForAutocomplete(employeeList);
+		List<String> employeeListForAutocomplete = employeeService.getEmployeeListForAutocomplete(employeeList);
 		model.addAttribute("employeeListForAutocomplete", employeeListForAutocomplete);
 		
 		return "employee/list";
