@@ -24,8 +24,6 @@ public class SecurityConfig {
 	/**
 	 * このメソッドをオーバーライドすることで、 特定のリクエストに対して「セキュリティ設定」を 無視する設定など全体にかかわる設定ができる.
 	 * 具体的には静的リソースに対してセキュリティの設定を無効にする。
-	 * 
-	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.WebSecurity)
 	 */
 	@Bean
 	WebSecurityCustomizer webSecurityCustomizer() {
@@ -34,13 +32,12 @@ public class SecurityConfig {
 
 	/**
 	 * このメソッドをオーバーライドすることで、認証と認可の設定やログイン/ログアウトに関する設定ができる.
-	 * 
-	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.HttpSecurity)
+	 *
 	 */
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(ahr -> ahr
-				.requestMatchers("/", "/toInsert", "/insert").permitAll() // 「/」などのパスは全てのユーザに許可
+				.requestMatchers("/", "/toInsert", "/insert","/error/**").permitAll() // 「/」などのパスは全てのユーザに許可
 				// .requestMatchers("/admin/**").hasRole("ADMIN")
 				// /admin/から始まるパスはADMIN権限でログインしている場合のみアクセス可(権限設定時の「ROLE_」を除いた文字列を指定)
 				// .requestMatchers("/user/**").hasRole("USER") //
