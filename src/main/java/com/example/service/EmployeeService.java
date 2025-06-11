@@ -1,11 +1,8 @@
 package com.example.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
-
+import com.example.domain.Employee;
+import com.example.form.InsertEmployeeForm;
+import com.example.repository.EmployeeRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,9 +11,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.domain.Employee;
-import com.example.form.InsertEmployeeForm;
-import com.example.repository.EmployeeRepository;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 従業員情報を操作するサービス.
@@ -133,7 +132,7 @@ public class EmployeeService {
         int startItemCount = page * size;
         // 絞り込んだ後の従業員リストが入る変数
         List<Employee> list;
-
+        
         if (employeeList.size() < startItemCount) {
             // (ありえないが)もし表示させたい従業員カウントがサイズよりも大きい場合は空のリストを返す
             list = Collections.emptyList();
@@ -153,8 +152,7 @@ public class EmployeeService {
      * オートコンプリート用にJavaScriptの配列の中身を作ります.
      *
      * @param employeeList 従業員一覧
-     * @return　オートコンプリート用JavaScriptの配列の文字列
-     * 　　　　　(例) "渡辺三郎","佐藤次郎","山本八郎","小林九子"
+     * @return　オートコンプリート用JavaScriptの配列の文字列 　　　　　(例) "渡辺三郎","佐藤次郎","山本八郎","小林九子"
      */
     public List<String> getEmployeeListForAutocomplete(List<Employee> employeeList) {
         List<String> employeeListForAutocomplete = new ArrayList<>();

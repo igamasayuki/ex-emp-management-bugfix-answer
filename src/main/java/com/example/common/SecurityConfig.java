@@ -11,39 +11,37 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * ログイン認証用設定.<br>
- * 
+ * <p>
  * 書き方が変更になりました。(以下、参考URL)<br>
  * https://qiita.com/suke_masa/items/908805dd45df08ba28d8
- * 
- * @author igamasayuki
  *
+ * @author igamasayuki
  */
 @Configuration // 設定用のクラス
 public class SecurityConfig {
 
-	/**
-	 * このメソッドをオーバーライドすることで、 特定のリクエストに対して「セキュリティ設定」を 無視する設定など全体にかかわる設定ができる.
-	 * 具体的には静的リソースに対してセキュリティの設定を無効にする。
-	 */
-	@Bean
-	WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("/css/**", "/img/**", "/js/**");
-	}
+    /**
+     * このメソッドをオーバーライドすることで、 特定のリクエストに対して「セキュリティ設定」を 無視する設定など全体にかかわる設定ができる.
+     * 具体的には静的リソースに対してセキュリティの設定を無効にする。
+     */
+    @Bean
+    WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/css/**", "/img/**", "/js/**");
+    }
 
-	/**
-	 * このメソッドをオーバーライドすることで、認証と認可の設定やログイン/ログアウトに関する設定ができる.
-	 *
-	 */
-	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(ahr -> ahr
-				.requestMatchers("/", "/toInsert", "/insert","/error/**").permitAll() // 「/」などのパスは全てのユーザに許可
-				// .requestMatchers("/admin/**").hasRole("ADMIN")
-				// /admin/から始まるパスはADMIN権限でログインしている場合のみアクセス可(権限設定時の「ROLE_」を除いた文字列を指定)
-				// .requestMatchers("/user/**").hasRole("USER") //
-				// /user/から始まるパスはUSER権限でログインしている場合のみアクセス可(権限設定時の「ROLE_」を除いた文字列を指定)
-				.anyRequest().authenticated()); // それ以外のパスの場合はログイン認証が必要
-		
+    /**
+     * このメソッドをオーバーライドすることで、認証と認可の設定やログイン/ログアウトに関する設定ができる.
+     */
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(ahr -> ahr
+                .requestMatchers("/", "/toInsert", "/insert", "/error/**").permitAll() // 「/」などのパスは全てのユーザに許可
+                // .requestMatchers("/admin/**").hasRole("ADMIN")
+                // /admin/から始まるパスはADMIN権限でログインしている場合のみアクセス可(権限設定時の「ROLE_」を除いた文字列を指定)
+                // .requestMatchers("/user/**").hasRole("USER") //
+                // /user/から始まるパスはUSER権限でログインしている場合のみアクセス可(権限設定時の「ROLE_」を除いた文字列を指定)
+                .anyRequest().authenticated()); // それ以外のパスの場合はログイン認証が必要
+
         http.formLogin(login -> login // ログインに関する設定
                 .loginPage("/") // ログイン画面に遷移させるパス(ログイン認証が必要なパスを指定してかつログインされていないとこのパスに遷移される)
                 .loginProcessingUrl("/login") // ログインボタンを押した際に遷移させるパス(ここに遷移させれば自動的にログインが行われる)
@@ -59,22 +57,22 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/") // ログアウト後に遷移させるパス(ここではログイン画面を設定)
                 .deleteCookies("JSESSIONID") // ログアウト後、Cookieに保存されているセッションIDを削除
                 .invalidateHttpSession(true)); // true:ログアウト後、セッションを無効にする false:セッションを無効にしない
-		return http.build();
-	}
+        return http.build();
+    }
 
-	/**
-	 * <pre>
-	 * bcryptアルゴリズムでハッシュ化する実装を返します.
-	 * これを指定することでパスワードハッシュ化やマッチ確認する際に
-	 * &#64;Autowired
-	 * private PasswordEncoder passwordEncoder;
-	 * と記載するとDIされるようになります。
-	 * </pre>
-	 * 
-	 * @return bcryptアルゴリズムでハッシュ化する実装オブジェクト
-	 */
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    /**
+     * <pre>
+     * bcryptアルゴリズムでハッシュ化する実装を返します.
+     * これを指定することでパスワードハッシュ化やマッチ確認する際に
+     * &#64;Autowired
+     * private PasswordEncoder passwordEncoder;
+     * と記載するとDIされるようになります。
+     * </pre>
+     *
+     * @return bcryptアルゴリズムでハッシュ化する実装オブジェクト
+     */
+    @Bean
+    private PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

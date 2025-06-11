@@ -2,9 +2,8 @@ package com.example.form;
 
 /**
  * ログイン時に使用するフォーム.  (SpringSecurityに任せるためコメントアウトしました)
- * 
+ *
  * @author igamasayuki
- * 
  */
 //public class LoginForm {
 //	/** メールアドレス */

@@ -38,7 +38,7 @@ public class SecurityConfig {
 	  * @return bcryptアルゴリズムで暗号化する実装オブジェクト
 	  */
 	 @Bean
-	 PasswordEncoder passwordEncoder() {
+	 private PasswordEncoder passwordEncoder() {
 	     return new BCryptPasswordEncoder();
 	 }
 }
@@ -70,14 +70,14 @@ public class SecurityConfig {
 	 * @param password    パスワード
 	 * @return 管理者情報 存在しない場合またはパスワードが不一致だった場合はnullが返ります
 	 */
-	public Administrator login(String mailAddress, String passward) {
+	public Administrator login(String mailAddress, String password) {
 		Administrator administrator = administratorRepository.findByMailAddress(mailAddress);
 		// 対象の管理者がいない場合はnullを返す
 		if (administrator == null) {
 			return null;
 		}
 		// パスワードが不一致だった場合はnullを返す
-		if (!passwordEncoder.matches(passward, administrator.getPassword())) {
+		if (!passwordEncoder.matches(password, administrator.getPassword())) {
 			return null;
 		}
 		

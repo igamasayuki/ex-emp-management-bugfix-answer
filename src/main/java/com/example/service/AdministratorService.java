@@ -1,43 +1,41 @@
 package com.example.service;
 
+import com.example.domain.Administrator;
+import com.example.repository.AdministratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.domain.Administrator;
-import com.example.repository.AdministratorRepository;
-
 /**
  * 管理者情報を操作するサービス.
- * 
- * @author igamasayuki
  *
+ * @author igamasayuki
  */
 @Service
 @Transactional
 public class AdministratorService {
 	
-	@Autowired
-	private AdministratorRepository administratorRepository;
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AdministratorRepository administratorRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	/**
-	 * 管理者情報を登録します.
-	 * パスワードはここでハッシュ化されます
-	 * 
-	 * @param administrator 管理者情報
-	 */
-	public void insert(Administrator administrator) {
-		
-		// パスワードをハッシュ化する
-		String encodePassword = passwordEncoder.encode(administrator.getPassword());
-		administrator.setPassword(encodePassword);
-		
-		administratorRepository.insert(administrator);
-	}
-	
+    /**
+     * 管理者情報を登録します.
+     * パスワードはここでハッシュ化されます
+     *
+     * @param administrator 管理者情報
+     */
+    public void insert(Administrator administrator) {
+
+        // パスワードをハッシュ化する
+        String encodePassword = passwordEncoder.encode(administrator.getPassword());
+        administrator.setPassword(encodePassword);
+
+        administratorRepository.insert(administrator);
+    }
+
 //	/**
 //	 * ログインをします.(SpringSecurityに任せるためコメントアウトしました)
 //	 * @param mailAddress メールアドレス
@@ -52,15 +50,15 @@ public class AdministratorService {
 //		}
 //		return null;
 //	}
-	
-	/**
-	 * メールアドレスから管理者情報を取得します.
-	 * 
-	 * @param mailAddress メールアドレス
-	 * @return 管理者情報 存在しない場合はnullを返します
-	 */
-	public Administrator findByMailAddress(String mailAddress) {
-		return administratorRepository.findByMailAddress(mailAddress);
-	}
+
+    /**
+     * メールアドレスから管理者情報を取得します.
+     *
+     * @param mailAddress メールアドレス
+     * @return 管理者情報 存在しない場合はnullを返します
+     */
+    public Administrator findByMailAddress(String mailAddress) {
+        return administratorRepository.findByMailAddress(mailAddress);
+    }
 
 }
