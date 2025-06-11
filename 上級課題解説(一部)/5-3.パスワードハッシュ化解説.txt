@@ -38,7 +38,7 @@ public class SecurityConfig {
 	  * @return bcryptアルゴリズムで暗号化する実装オブジェクト
 	  */
 	 @Bean
-	 private PasswordEncoder passwordEncoder() {
+	 PasswordEncoder passwordEncoder() {
 	     return new BCryptPasswordEncoder();
 	 }
 }
