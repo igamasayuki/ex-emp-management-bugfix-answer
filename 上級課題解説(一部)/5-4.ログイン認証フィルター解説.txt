@@ -12,9 +12,9 @@ dependencies {
 　SecurityConfigクラス
 　　・・・ログイン認証用の設定クラスを参照のこと
 
-○ドメイン
+○ログイン情報保持クラス(ドメイン)
 　LoginAdministratorクラス
-　　・・・Administratorドメインに権限(ロール)情報が付与されたドメイン
+　・・・AdministratorドメインにSpring Securityのユーザー情報（UserDetails）としての振る舞いを追加したクラス
 
 ○サービスクラス
 　AdministratorDetailsServiceImplクラス

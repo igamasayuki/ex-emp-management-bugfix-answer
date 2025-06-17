@@ -3,7 +3,6 @@ package com.example.service;
 import com.example.domain.Administrator;
 import com.example.domain.LoginAdministrator;
 import com.example.repository.AdministratorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,8 +23,11 @@ public class AdministratorDetailsServiceImpl implements UserDetailsService {
     /**
      * DBから情報を得るためのリポジトリ
      */
-    @Autowired
-    private AdministratorRepository administratorRepository;
+    private final AdministratorRepository administratorRepository;
+
+    public AdministratorDetailsServiceImpl(AdministratorRepository administratorRepository) {
+        this.administratorRepository = administratorRepository;
+    }
 
     /*
      * (non-Javadoc)
