@@ -1,0 +1,14 @@
+{
+  "name": "ex-emp-management-bugfix-answer",
+  "version": "1.0.0",
+  "description": "Spring Boot + PostgreSQL アプリケーションの Docker 実行手順です。",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.54.0",
+    "@types/node": "^24.0.13"
+  }
+}
