@@ -17,7 +17,8 @@
 		<label th:errors="*{imageFile}" class="error-messages">
 			写真を選択してください
 		</label>
-		<input name="imageFile" type="file" accept=".jpg,.png,image/jpeg,image/png" th:errorclass="error-input"/>
+		<input name="imageFile" type="file" accept=".jpg,.png,image/jpeg,image/png"
+		        th:errorclass="error-input"/>
     </td>
   </tr>
 
@@ -38,6 +39,10 @@
  
  ===================================================
  画像ファイルはBase64形式に変換してDBに保存する方法&排他制御
+ ※実務では、画像ファイルはDBに保存せず、
+ 　・ファイルサーバーに画像を保存してパスだけDBに保存する
+ 　・DBにBLOB型のカラムを用意して画像ファイルを保存する
+ 　方法が一般的ですが、今回は手軽にできるBase64形式でDBに保存する方法を紹介します。
  ===================================================
  ○EmployeeServiceの insert()メソッド
  
@@ -84,6 +89,7 @@
 
 ===========================================
 (番外編)MultipartFileクラスのtransferTo(Path dest)を使わずに画像ファイルをサーバーに保存する方法
+　　　　これもサーバー再起動しないと画像が反映されません。
 ===========================================
 
 	Employee employee = new Employee();
