@@ -1,17 +1,34 @@
 # ex-emp-management-bugfix-answer
 
-Spring Boot + PostgreSQL アプリケーションの Docker 実行手順です。
+Spring Boot + PostgreSQL アプリケーションの開発環境セットアップ手順です。
 
 ## 構成概要
 
-- **Java**: Eclipse Temurin JDK 25
-- **ビルドツール**: Gradle（公式Dockerイメージ使用）
-- **DB**: PostgreSQL 15
+- **Java**: Eclipse Temurin JDK 25（Gradle toolchain が自動ダウンロード）
+- **ビルドツール**: Gradle
+- **DB**: PostgreSQL 15（Docker で起動）
 - **初期化SQL**: `db/init.sql`
 
 ---
 
-## Docker を使った起動手順
+## 開発環境のパターン
+
+**DB のみ Docker で起動し、アプリはローカルで実行する**方式です。
+
+```
+[IDE / コマンドライン]          [Docker]
+  Spring Boot アプリ   <-->   PostgreSQL
+  (localhost:8080)            (localhost:5432)
+```
+
+この方式のメリット:
+- コード変更のたびに Docker イメージをビルドし直す必要がない
+- IDE のデバッガがそのまま使える
+- 起動が速い
+
+---
+
+## セットアップ手順
 
 ### 前提
 
@@ -34,22 +51,43 @@ cd ex-emp-management-bugfix-answer
 
 ---
 
-### 2. コンテナ起動
+### 2. DB（PostgreSQL）を起動
 
 ```bash
-docker compose up --build
+docker compose up
 ```
 
-初回はイメージのビルドと依存ライブラリのダウンロードに数分かかります。  
-`Started ExEmpManagement...` のログが出れば起動完了です。
+初回は PostgreSQL イメージのダウンロードと `db/init.sql` の実行が行われます。  
+`database system is ready to accept connections` のログが出れば起動完了です。
 
 ---
 
-### 3. アプリケーションアクセス
+### 3. アプリを起動
+
+IDE（Eclipse / IntelliJ）からメインクラスを実行するか、以下のコマンドを使います。
+
+```bash
+./gradlew bootRun
+```
+
+初回は Gradle が JDK 25 を自動ダウンロードします（数分かかる場合があります）。
+
+---
+
+### 4. アプリケーションアクセス
 
 ```
 http://localhost:8080
 ```
+
+---
+
+## ログイン情報
+
+| 項目 | 値 |
+|---|---|
+| メールアドレス | admin@example.com |
+| パスワード | admin |
 
 ---
 
@@ -62,25 +100,24 @@ http://localhost:8080
 
 ---
 
-## コマンドの使い分け
+## DB コンテナの操作
 
 | 状況 | コマンド |
 |---|---|
-| コードを変更した | `docker compose up --build` |
-| 再起動だけしたい | `docker compose up` |
-| 停止する | `Ctrl + C` |
-| コンテナを削除する | `docker compose down` |
+| 起動 | `docker compose up` |
+| バックグラウンド起動 | `docker compose up -d` |
+| 停止 | `Ctrl + C` または `docker compose down` |
 | DBのデータもリセットする | `docker compose down -v` |
 
 ---
 
 ## データベース初期化について
 
-`init.sql` が以下の場所に自動マウントされ、コンテナ初回起動時に自動で実行されます。
+`db/init.sql` が以下の場所に自動マウントされ、コンテナ初回起動時に自動で実行されます。
 
 ```yaml
 volumes:
   - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 ```
 
-テーブル作成・初期データ投入はすべて自動で行われます。JDK・PostgreSQLの手動インストールは不要です。
+テーブル作成・初期データ投入はすべて自動で行われます。JDK・PostgreSQL の手動インストールは不要です。
