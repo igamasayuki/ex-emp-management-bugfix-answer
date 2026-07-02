@@ -7,7 +7,7 @@ Spring Boot + PostgreSQL アプリケーションの Docker 実行手順です�
 - **Java**: Eclipse Temurin JDK 25
 - **ビルドツール**: Gradle（公式Dockerイメージ使用）
 - **DB**: PostgreSQL 15
-- **初期化SQL**: `init.sql`（プロジェクト直下）
+- **初期化SQL**: `db/init.sql`
 
 ---
 
@@ -80,7 +80,7 @@ http://localhost:8080
 
 ```yaml
 volumes:
-  - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 ```
 
 テーブル作成・初期データ投入はすべて自動で行われます。JDK・PostgreSQLの手動インストールは不要です。
