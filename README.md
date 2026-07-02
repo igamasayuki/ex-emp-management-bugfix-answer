@@ -2,21 +2,26 @@
 
 Spring Boot + PostgreSQL アプリケーションの Docker 実行手順です。
 
-## 📦 構成概要
+## 構成概要
 
-- **Java**: Eclipse Temurin JDK 21
-- **ビルドツール**: Gradle（Wrapper使用）
+- **Java**: Eclipse Temurin JDK 25
+- **ビルドツール**: Gradle（公式Dockerイメージ使用）
 - **DB**: PostgreSQL 15
 - **初期化SQL**: `init.sql`（プロジェクト直下）
 
 ---
 
-## 🐳 Docker を使った起動手順
+## Docker を使った起動手順
 
 ### 前提
 
-- [Docker](https://www.docker.com/) がインストールされていること  
-  （※Macの場合は [Colima](https://github.com/abiosoft/colima) + Docker CLI も可）
+以下のいずれかをインストールしていること
+
+| OS | ツール | 商用利用 |
+|---|---|---|
+| Mac / Windows | [Rancher Desktop](https://rancherdesktop.io/)（dockerd モードに変更） | 無料 |
+| Mac | [Docker Desktop](https://www.docker.com/) | 従業員250人未満は無料 |
+| Windows | [Docker Desktop](https://www.docker.com/) | 従業員250人未満は無料 |
 
 ---
 
@@ -29,26 +34,18 @@ cd ex-emp-management-bugfix-answer
 
 ---
 
-### 2. 初期化SQLの配置
-
-初期化用SQL `init.sql` はプロジェクト直下に配置済みです。
-
----
-
-### 3. Dockerイメージのビルド & コンテナ起動
+### 2. コンテナ起動
 
 ```bash
-docker-compose up -d --build
+docker compose up --build
 ```
 
-※-d ・・・ バックグラウンドで起動させます  
-※初回はビルドおよび依存コンテナの起動に1〜2分程度かかります。
+初回はイメージのビルドと依存ライブラリのダウンロードに数分かかります。  
+`Started ExEmpManagement...` のログが出れば起動完了です。
 
 ---
 
-### 4. アプリケーションアクセス
-
-アプリケーションが起動したら、以下のURLにアクセス：
+### 3. アプリケーションアクセス
 
 ```
 http://localhost:8080
@@ -56,42 +53,34 @@ http://localhost:8080
 
 ---
 
-## 💾 使用ポート
+## 使用ポート
 
-| サービス                  | ポート  |
-|-----------------------|------|
+| サービス | ポート |
+|---|---|
 | アプリケーション（Spring Boot） | 8080 |
-| データベース（PostgreSQL）    | 5432 |
+| データベース（PostgreSQL） | 5432 |
 
 ---
 
-## 🔧 環境変数（`.env`不要）
+## コマンドの使い分け
 
-環境変数は `docker-compose.yml` 内に記述済みです。
+| 状況 | コマンド |
+|---|---|
+| コードを変更した | `docker compose up --build` |
+| 再起動だけしたい | `docker compose up` |
+| 停止する | `Ctrl + C` |
+| コンテナを削除する | `docker compose down` |
+| DBのデータもリセットする | `docker compose down -v` |
 
 ---
 
-## 📁 その他
+## データベース初期化について
 
-### データベース初期化
-
-`init.sql` が以下の場所に自動マウントされ、コンテナ起動時に自動で実行されます：
+`init.sql` が以下の場所に自動マウントされ、コンテナ初回起動時に自動で実行されます。
 
 ```yaml
 volumes:
   - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 ```
 
----
-
-## 🛑 停止とクリーンアップ
-
-```bash
-docker-compose down
-```
-
-キャッシュ含めて削除したい場合：
-
-```bash
-docker-compose down --volumes --rmi all
-```
+テーブル作成・初期データ投入はすべて自動で行われます。JDK・PostgreSQLの手動インストールは不要です。

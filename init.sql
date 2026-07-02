@@ -10,6 +10,9 @@ create table administrators(
   password text not null
 );
 
+-- 管理者情報インサートデータ
+insert into administrators(name, mail_address, password) values('管理者', 'admin@example.com', '$2a$10$/CUMjeZhqneXDtEso23HXOhfgz8IN6YMVebjRplTyyt7va97Pnyoe');
+
 -- 従業員情報テーブル
 create table employees (
   id integer primary key,

@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
 
         logger.error(e.getMessage(), e);
 
-        return "error/500";
+        return "error/5xx";
     }
 
 }

@@ -4,6 +4,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/student
     username: postgres
     password: postgres
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
   jmx:
     default-domain: ex-emp-management
   # Spring Security .defaultSuccessUrl("/employee/showList", false)とした場合に初回のログインが失敗する現象に対応

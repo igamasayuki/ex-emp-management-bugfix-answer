@@ -1,21 +1,17 @@
-# JDK21をベースにする
-FROM eclipse-temurin:21-jdk AS build
+# ビルドステージ: 公式GradleイメージのJDK25版（Gradleは常に最新安定版）
+FROM gradle:jdk25 AS build
 
 WORKDIR /app
 
-# Gradle wrapperとソースをまとめてコピー
 COPY . .
 
-# ビルド実行（テストはスキップする場合は -x test を追加）
-RUN ./gradlew clean bootJar
+RUN gradle clean bootJar --no-daemon
 
-# ランタイム用イメージに切り替え（軽量）
-FROM eclipse-temurin:21-jdk-jammy
+# 実行ステージ: 軽量なJREイメージ
+FROM eclipse-temurin:25-jre
 
 WORKDIR /app
 
-# ビルド済jarファイルをコピー
 COPY --from=build /app/build/libs/*.jar app.jar
 
-# 実行コマンド
 ENTRYPOINT ["java", "-jar", "app.jar"]
