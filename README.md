@@ -121,3 +121,60 @@ volumes:
 ```
 
 テーブル作成・初期データ投入はすべて自動で行われます。JDK・PostgreSQL の手動インストールは不要です。
+
+---
+
+## E2Eテスト
+
+Playwright を使った E2E テストを Docker で実行できます。ローカルに Node.js・Playwright のインストールは不要です。
+
+### 前提条件
+
+Docker Desktop または Rancher Desktop がインストールされていること。
+
+### 初回セットアップ
+
+```bash
+cp .env.example .env
+# 必要に応じて .env の内容を編集
+```
+
+### 全サービス起動（アプリ + DB）
+
+```bash
+docker compose up --build
+```
+
+### テスト実行（別ターミナルで）
+
+```bash
+docker compose --profile test run --rm playwright
+```
+
+### レポート確認方法
+
+テスト実行後、`e2e/playwright-report/index.html` をブラウザで開いてください。
+
+```bash
+# レポートをブラウザで自動表示（Node.js がある場合）
+cd e2e && npx playwright show-report
+```
+
+### よくあるトラブルと対処法
+
+**DBの接続エラー**
+```
+Connection refused to localhost:5432
+```
+→ `docker compose up` でDBが起動していることを確認してください。
+
+**アプリのヘルスチェック失敗**
+```
+dependency failed to start: container emp_app is unhealthy
+```
+→ アプリの起動に時間がかかっている場合があります。`docker compose logs app` でログを確認してください。
+
+**セレクターの調整方法**
+
+`e2e/tests/pages/LoginPage.ts` の TODO コメント箇所を参照してください。
+ブラウザの開発者ツールで実際の HTML 要素を確認し、セレクターを修正してください。

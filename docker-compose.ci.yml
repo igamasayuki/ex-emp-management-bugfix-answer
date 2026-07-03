@@ -1,0 +1,8 @@
+# CI用オーバーライド
+# docker compose -f docker-compose.yml -f docker-compose.ci.yml --profile test up ...
+services:
+  app:
+    restart: "no"
+  playwright:
+    # CI ではコードをイメージに焼き込むためボリュームマウントを無効化
+    volumes: []

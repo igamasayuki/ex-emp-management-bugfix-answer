@@ -2,17 +2,62 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:15
+    image: postgres:16-alpine
     container_name: emp_pg
     environment:
-      POSTGRES_DB: emp_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 5s
+      timeout: 5s
       retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    container_name: emp_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: docker
+    # TODO: Spring Boot Actuator を追加すると /actuator/health でより正確なヘルスチェックができる
+    # build.gradle の dependencies に追加:
+    #   implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/ -o /dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  playwright:
+    build:
+      context: .
+      dockerfile: docker/playwright/Dockerfile
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      BASE_URL: ${BASE_URL:-http://app:8080}
+    volumes:
+      - ./e2e:/e2e
+      - /e2e/node_modules
+    profiles:
+      - test
+
+volumes:
+  postgres_data:
