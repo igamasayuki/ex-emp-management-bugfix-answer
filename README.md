@@ -134,9 +134,14 @@ Docker Desktop または Rancher Desktop がインストールされているこ
 
 ### 初回セットアップ
 
+プロジェクトルートに `.env` ファイルを作成してください。
+
 ```bash
-cp .env.example .env
-# 必要に応じて .env の内容を編集
+# .env ファイルの内容
+POSTGRES_DB=emp_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+BASE_URL=http://app:8080
 ```
 
 ### 全サービス起動（アプリ + DB）
